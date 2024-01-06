@@ -3,6 +3,7 @@
 # ----------------------------
 import pandas as pd
 from pathlib import Path
+import matplotlib.pyplot as plt
 # Torch modules
 from torch.utils.data import random_split, DataLoader
 import torch.nn as nn
@@ -58,62 +59,63 @@ next(myModel.parameters()).device
 # ----------------------------
 # Training Loop
 # ----------------------------
-def training(model, train_dl, num_epochs):
-  # Loss Function, Optimizer and Scheduler
-  criterion = nn.CrossEntropyLoss()
-  optimizer = torch.optim.Adam(model.parameters(),lr=0.001)
-  scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.001,
-                                                steps_per_epoch=int(len(train_dl)),
-                                                epochs=num_epochs,
-                                                anneal_strategy='linear')
+def training(model, train_dl, val_dl, num_epochs):
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.001,
+                                                    steps_per_epoch=int(len(train_dl)),
+                                                    epochs=num_epochs,
+                                                    anneal_strategy='linear')
 
-  # Repeat for each epoch
-  for epoch in range(num_epochs):
-    running_loss = 0.0
-    correct_prediction = 0
-    total_prediction = 0
+    for epoch in range(num_epochs):
+        model.train()  # Set the model to training mode
+        running_loss, running_corrects, total = 0.0, 0, 0
 
-    # Repeat for each batch in the training set
-    for i, data in enumerate(train_dl):
-        # Get the input features and target labels, and put them on the GPU
-        inputs, labels = data[0].to(device), data[1].to(device)
+        # Training phase
+        for inputs, labels in train_dl:
+            inputs, labels = inputs.to(device), labels.to(device)
 
-        # Normalize the inputs
-        inputs_m, inputs_s = inputs.mean(), inputs.std()
-        inputs = (inputs - inputs_m) / inputs_s
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            scheduler.step()
 
-        # Zero the parameter gradients
-        optimizer.zero_grad()
+            running_loss += loss.item() * inputs.size(0)
+            _, predictions = torch.max(outputs, 1)
+            running_corrects += torch.sum(predictions == labels.data)
 
-        # forward + backward + optimize
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        scheduler.step()
+        epoch_loss = running_loss / len(train_dl.dataset)
+        epoch_acc = running_corrects.double() / len(train_dl.dataset)
 
-        # Keep stats for Loss and Accuracy
-        running_loss += loss.item()
+        # Validation phase
+        model.eval()  # Set the model to evaluation mode
+        val_loss, val_corrects = 0.0, 0
 
-        # Get the predicted class with the highest score
-        _, prediction = torch.max(outputs,1)
-        # Count of predictions that matched the target label
-        correct_prediction += (prediction == labels).sum().item()
-        total_prediction += prediction.shape[0]
+        with torch.no_grad():
+            for inputs, labels in val_dl:
+                inputs, labels = inputs.to(device), labels.to(device)
+                outputs = model(inputs)
+                loss = criterion(outputs, labels)
 
-        #if i % 10 == 0:    # print every 10 mini-batches
-        #    print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 10))
-    
-    # Print stats at the end of the epoch
-    num_batches = len(train_dl)
-    avg_loss = running_loss / num_batches
-    acc = correct_prediction/total_prediction
-    print(f'Epoch: {epoch}, Loss: {avg_loss:.2f}, Accuracy: {acc:.2f}')
+                val_loss += loss.item() * inputs.size(0)
+                _, predictions = torch.max(outputs, 1)
+                val_corrects += torch.sum(predictions == labels.data)
 
-  print('Finished Training')
-  
-num_epochs=16   # Tune this to train longer
-training(myModel, train_dl, num_epochs)
+        val_loss = val_loss / len(val_dl.dataset)
+        val_acc = val_corrects.double() / len(val_dl.dataset)
+
+        print(f'Epoch {epoch+1}/{num_epochs}, '
+              f'Train Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, '
+              f'Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}')
+
+    print('Finished Training')
+
+
+# Usage
+num_epochs = 8
+training(myModel, train_dl, val_dl, num_epochs)
 
 # ----------------------------
 # Inference

@@ -4,8 +4,14 @@ This is a simple gradio application that trains on a dataset of urban sounds and
 With the help of Ketan Doshi: https://towardsdatascience.com/audio-deep-learning-made-simple-sound-classification-step-by-step-cebc936bbe5
 Uses the UrbanSound8K audio dataset of 10 different plausible urban city sounds: https://urbansounddataset.weebly.com/urbansound8k.html
 
-## Future Work
+## Future Work Log
+1/5/2024
 * Modify training to consider how much attention the gun_shot and louder noises are grabbing. In its current state, I think it can sometimes correctly identify the more obvious distinctions among classes , but a lot are getting classified as gun shots or car horns.
+
+1/6/2024
+* Add dropout on cnn layers and visualized validation loss against training loss to monitor signs of overfitting.
+* Noted better performances on lower frequency sounds as a result, and got a successful input drilling noise to be classified off of youtube.
+
 
 ### Pillars of Improvement
 #### Testing Different Kernel Sizes
