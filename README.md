@@ -12,8 +12,13 @@ Uses the UrbanSound8K audio dataset of 10 different plausible urban city sounds:
 * Add dropout on cnn layers and visualized validation loss against training loss to monitor signs of overfitting.
 * Noted better performances on lower frequency sounds as a result, and got a successful input drilling noise to be classified off of youtube.
 
+1/7/2024
+* Increased size of kernels in cnn blocks to see if more information could be propagated between epochs to help with the more granular differences between sound clips (e.g., humming in background but theres also some music maybe)
+* Noticed accuracy boost from this (83% with 12 epochs) street_music and car_horn still has trouble for example though, could be dataset limitation
+* Studied importance and meaning of backpropagation in each epoch, weight adjustments, and how that relates to kernels throughout training.
 
-### Pillars of Improvement
+
+### Pillars of Improvement (backprops, hyperparameters, and model updates)
 #### Testing Different Kernel Sizes
 You can experiment with different kernel sizes to see how they affect your model's ability to capture features. Common choices are 3x3, 5x5, and sometimes larger like 7x7.
 

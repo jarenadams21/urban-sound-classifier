@@ -24,7 +24,7 @@ class AudioClassifier(nn.Module):
         conv_layers += [self.conv1, self.relu1, self.bn1, self.drop1]
 
         # Second Convolution Block
-        self.conv2 = nn.Conv2d(8, 16, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.conv2 = nn.Conv2d(8, 16, kernel_size=(5, 5), stride=(2, 2), padding=(1, 1))
         self.relu2 = nn.ReLU()
         self.bn2 = nn.BatchNorm2d(16)
         self.drop2 = nn.Dropout(0.25)  # Dropout layer
@@ -33,7 +33,7 @@ class AudioClassifier(nn.Module):
         conv_layers += [self.conv2, self.relu2, self.bn2, self.drop2]
 
         # Third Convolution Block
-        self.conv3 = nn.Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.conv3 = nn.Conv2d(16, 32, kernel_size=(5, 5), stride=(2, 2), padding=(1, 1))
         self.relu3 = nn.ReLU()
         self.bn3 = nn.BatchNorm2d(32)
         self.drop3 = nn.Dropout(0.25)  # Dropout layer
@@ -42,7 +42,7 @@ class AudioClassifier(nn.Module):
         conv_layers += [self.conv3, self.relu3, self.bn3, self.drop3]
 
         # Fourth Convolution Block
-        self.conv4 = nn.Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.conv4 = nn.Conv2d(32, 64, kernel_size=(7, 7), stride=(2, 2), padding=(1, 1))
         self.relu4 = nn.ReLU()
         self.bn4 = nn.BatchNorm2d(64)
         self.drop4 = nn.Dropout(0.25)  # Dropout layer
