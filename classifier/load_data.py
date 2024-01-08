@@ -114,7 +114,7 @@ def training(model, train_dl, val_dl, num_epochs):
 
 
 # Usage
-num_epochs = 8
+num_epochs = 16
 training(myModel, train_dl, val_dl, num_epochs)
 
 # ----------------------------

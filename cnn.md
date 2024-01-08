@@ -16,6 +16,18 @@ This is a common practice in CNN design. The idea is to start with a small numbe
 
 3. Effect: Pooling reduces the dimensions of feature maps, which not only helps in reducing computation but also makes the representation somewhat invariant to small shifts and distortions. Additionally, pooling helps in extracting dominant features which are robust to variations in the input.
 
+### Reminders
+In each epoch, we go through validation/training data and generate output predictions from the model. Because its probabilistic, i assume pytorch batches this into one request and provides a ratio in some way of correct vs incorrect predictions. This can be used to tally up a running correct vs total predictions count, and help with identifying/validating its performance. The inference at the end acts as a last step to notify you on the state of the model before its loaded and used in the app
+
+### Needs more study
+Why this might happen (probably normal, curious on reasoning why certain epochs might be stagnant and if thats avoidable):
+```
+Epoch 8/16, Train Loss: 0.7759, Train Acc: 0.7365, Val Loss: 0.6746, Val Acc: 0.7761
+Epoch 9/16, Train Loss: 0.7513, Train Acc: 0.7419, Val Loss: 0.6257, Val Acc: 0.7944
+Epoch 10/16, Train Loss: 0.6793, Train Acc: 0.7677, Val Loss: 0.6003, Val Acc: 0.7950
+Epoch 11/16, Train Loss: 0.6389, Train Acc: 0.7836, Val Loss: 0.5752, Val Acc: 0.8167
+```
+
 #### Summary
 ```
 /*

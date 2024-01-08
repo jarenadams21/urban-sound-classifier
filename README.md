@@ -1,3 +1,4 @@
+source classifier/bin/activate
 # Simple Deep Learning Sound Classification
 This is a simple gradio application that trains on a dataset of urban sounds and classifies between 10 different classes. It then takes microphone input and classifies after the model is done training. (THIS MODEL IS NOT FINELY TUNED, and its training steps do not yield confident accuracy results)
 
@@ -17,6 +18,11 @@ Uses the UrbanSound8K audio dataset of 10 different plausible urban city sounds:
 * Noticed accuracy boost from this (83% with 12 epochs) street_music and car_horn still has trouble for example though, could be dataset limitation
 * Studied importance and meaning of backpropagation in each epoch, weight adjustments, and how that relates to kernels throughout training.
 
+1/7/2024-extended
+* Examining effects of increased convultional complexity with added block, larger kernels, and smaller strides to use more input data (but these stride decreases were reciprocated by padding increases and i am unsure on the result of those two decisions in tandem right now)
+* Havent touched kaiming_normal logic, would be helpful to understand its purpose
+* Increased dropout at more complex cnn layers (higher dimension inputs)
+! Next steps: verify this project can be optimized with stronger modifications and move on to art detection/classifier using image  processing instead
 
 ### Pillars of Improvement (backprops, hyperparameters, and model updates)
 #### Testing Different Kernel Sizes
